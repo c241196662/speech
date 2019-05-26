@@ -180,8 +180,8 @@ public class Speech extends CordovaPlugin implements SpeechRecognizerCallback {
                         result = jsonObject.getJSONObject("payload").getString("result");
                     }
                 }
-                String format = "speech.stopRecognizeCallback(%s,%s);";
-                String js = String.format(format, fullResult, result);
+                String format = "speech.stopRecognizeCallback(%s);";
+                String js = String.format(format, fullResult);
                 instance.webView.loadUrl("javascript:" + js);
 //                mFullEdit.setText(fullResult);
 //                mResultEdit.setText(result);
@@ -205,8 +205,8 @@ public class Speech extends CordovaPlugin implements SpeechRecognizerCallback {
                         result = jsonObject.getJSONObject("payload").getString("result");
                     }
                 }
-                String format = "speech.stopRecognizeCallback(%s,%s);";
-                String js = String.format(format, fullResult, result);
+                String format = "speech.stopRecognizeCallback(%s);";
+                String js = String.format(format, fullResult);
                 instance.webView.loadUrl("javascript:" + js);
 //                mFullEdit.setText(fullResult);
 //                mResultEdit.setText(result);
