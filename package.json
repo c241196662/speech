@@ -1,0 +1,27 @@
+{
+  "name": "cordova-plugin-bakaan-speech",
+  "version": "1.0.0",
+  "description": "ali yuyin",
+  "cordova": {
+    "id": "cordova-plugin-bakaan-speech",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/c241196662/speech.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "bakaan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/c241196662/speech/issues"
+  },
+  "homepage": "https://github.com/c241196662/speech#readme"
+}
