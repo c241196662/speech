@@ -14,7 +14,7 @@
 		</config-file>
 		<config-file parent="/*" target="AndroidManifest.xml" />
 		<source-file src="src/android/Speech.java" target-dir="src/cordova/plugin/bakaan/speech" />
-		<source-file src="src/android/lib/nlssdk.aar" target-dir="app/src/main/libs" framework="true"/>
+		<source-file src="src/android/lib/nlssdk.aar" target-dir="app/libs" framework="true"/>
         <framework src="android-build.gradle" custom="true" type="gradleReference" />
 	</platform>
 	<platform name="ios">
