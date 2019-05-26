@@ -23,15 +23,15 @@
 2.3.通过cordova本地命令行安装 cordova plugin add speech
 ## 使用
 *
-*speech.startRecognizer({
-*				 token: token, // 从自己的服务器上获取token,或者从阿里的项目管理中获取token
-*				 appkey: appkey // appkey, 项目的appkey
-*			 }, function (msg) {
-*       // 成功启动录音的返回
-*			 	//setaction2('startRecognizer_success_' + msg);
-*			 }, function (e) {
-*       // 失败启动录音的返回
-*			 	//setaction2('startRecognizer_error_' + e);
-*			 });
+speech.startRecognizer({
+				 token: token, // 从自己的服务器上获取token,或者从阿里的项目管理中获取token
+				 appkey: appkey // appkey, 项目的appkey
+			 }, function (msg) {
+       // 成功启动录音的返回
+			 	//setaction2('startRecognizer_success_' + msg);
+			 }, function (e) {
+       // 失败启动录音的返回
+			 	//setaction2('startRecognizer_error_' + e);
+			 });
 *
 ## 施工中
