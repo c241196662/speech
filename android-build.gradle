@@ -1,0 +1,8 @@
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.aar'])
+    implementation 'com.alibaba:fastjson:1.1.70.android'
+}
