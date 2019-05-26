@@ -52,6 +52,9 @@ public class Speech extends CordovaPlugin implements SpeechRecognizerCallback {
         super.initialize(cordova, webView);
         mContext = cordova.getActivity().getApplicationContext();
         cordovaActivity = cordova.getActivity();
+
+        //第一步，创建client实例，client只需要创建一次，可以用它多次创建recognizer
+        client = new NlsClient();
     }
 
     @Override
@@ -177,7 +180,7 @@ public class Speech extends CordovaPlugin implements SpeechRecognizerCallback {
                         result = jsonObject.getJSONObject("payload").getString("result");
                     }
                 }
-                String format = "Speech.stopRecognizeCallback(%s,%s);";
+                String format = "speech.stopRecognizeCallback(%s,%s);";
                 String js = String.format(format, fullResult, result);
                 instance.webView.loadUrl("javascript:" + js);
 //                mFullEdit.setText(fullResult);
@@ -202,7 +205,7 @@ public class Speech extends CordovaPlugin implements SpeechRecognizerCallback {
                         result = jsonObject.getJSONObject("payload").getString("result");
                     }
                 }
-                String format = "Speech.stopRecognizeCallback(%s,%s);";
+                String format = "speech.stopRecognizeCallback(%s,%s);";
                 String js = String.format(format, fullResult, result);
                 instance.webView.loadUrl("javascript:" + js);
 //                mFullEdit.setText(fullResult);

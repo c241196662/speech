@@ -9,10 +9,8 @@ module.exports = {
         exec(onSuccess, onError, "Speech", "stopRecognizer", [message]);
     },
     stopRecognizeCallback: function (data) {
-        if (device.platform === "Android") {
-            data = JSON.stringify(data);
-            var event = JSON.parse(data);
-            cordova.fireDocumentEvent("Speech.stopRecognizeCallback", event);
-        }
+		data = JSON.stringify(data);
+		var event = JSON.parse(data);
+		cordova.fireDocumentEvent("speech.stopRecognizeCallback", event);
     }
 };

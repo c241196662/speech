@@ -8,11 +8,19 @@
 	</js-module>
 	<platform name="android">
 		<config-file parent="/*" target="res/xml/config.xml">
-			<feature name="speech">
+			<feature name="Speech">
 				<param name="android-package" value="cordova.plugin.bakaan.speech.Speech" />
 			</feature>
 		</config-file>
-		<config-file parent="/*" target="AndroidManifest.xml" />
+        <config-file target="AndroidManifest.xml" parent="/*">
+			<uses-permission android:name="android.permission.INTERNET" />
+			<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+			<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+			<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+			<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+			<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+			<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+        </config-file>
 		<source-file src="src/android/Speech.java" target-dir="src/cordova/plugin/bakaan/speech" />
 		<source-file src="src/android/lib/nlssdk.aar" target-dir="app/libs" framework="true"/>
         <framework src="android-build.gradle" custom="true" type="gradleReference" />
