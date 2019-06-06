@@ -33,7 +33,7 @@ import static android.media.AudioRecord.STATE_UNINITIALIZED;
 /**
  * This class echoes a string called from JavaScript.
  */
-public class Speech extends CordovaPlugin implements SpeechRecognizerCallback {
+public class Speech extends CordovaPlugin implements SpeechRecognizerCallback, SpeechSynthesizerCallback {
 
     private static final String TAG = "AliSpeechDemo";
 
@@ -171,10 +171,11 @@ public class Speech extends CordovaPlugin implements SpeechRecognizerCallback {
 
     /**
      * 启动语音播报
+     *
      * @param params
      * @param callbackContext
      */
-    private void startSynthesizer(org.json.JSONObject params, CallbackContext callbackContext){
+    private void startSynthesizer(org.json.JSONObject params, CallbackContext callbackContext) {
         try {
             String token = params.getString("token");
             String appkey = params.getString("appkey");
@@ -192,46 +193,45 @@ public class Speech extends CordovaPlugin implements SpeechRecognizerCallback {
                 return;
             }
 
-        // 第二步，定义语音合成回调类
-        MyCallback callback = new MyCallback();
-        // 第三步，创建语音合成对象
-        speechSynthesizer = client.createSynthesizerRequest(callback);
-        callback.setSynthesizer(speechSynthesizer);
+            // 第二步，定义语音合成回调类
+            // 第三步，创建语音合成对象
+            speechSynthesizer = client.createSynthesizerRequest(this);
 
-        // 第四步，设置token和appkey
-        // Token有有效期，请使用https://help.aliyun.com/document_detail/72153.html 动态生成token
-        speechSynthesizer.setToken("e410418d03d145f08cf13740621fe4a3");
-        // 请使用阿里云语音服务管控台(https://nls-portal.console.aliyun.com/)生成您的appkey
-        speechSynthesizer.setAppkey("gvMGprU3vTOPzVQC");
 
-        // 第五步，设置相关参数，以下选项都会改变最终合成的语音效果，可以按文档调整试听效果
-        // 设置人声
-        Log.i(TAG, "Set chosen voice " + chosenVoice);
-        speechSynthesizer.setVoice(chosenVoice);
-        // 设置语速
-        Log.i(TAG, "User set speechRate " + speechRate);
-        speechSynthesizer.setSpeechRate(speechRate);
-        // 设置要转为语音的文本
-        speechSynthesizer.setText(text);
-        // 设置语音数据采样率
-        speechSynthesizer.setSampleRate(SpeechSynthesizer.SAMPLE_RATE_16K);
-        // 设置语音编码，pcm编码可以直接用audioTrack播放，其他编码不行
-        speechSynthesizer.setFormat(SpeechSynthesizer.FORMAT_PCM);
-        // 设置音量
-        // speechSynthesizer.setVolume(50);
-        // 设置语速
-        // speechSynthesizer.setSpeechRate(0);
-        // 设置语调
-        // speechSynthesizer.setPitchRate(0);
+            Log.i(TAG, "start speechSynthesizer... " + token);
+            // 第四步，设置token和appkey
+            // Token有有效期，请使用https://help.aliyun.com/document_detail/72153.html 动态生成token
+            speechSynthesizer.setToken(token);
+            // 请使用阿里云语音服务管控台(https://nls-portal.console.aliyun.com/)生成您的appkey
+            speechSynthesizer.setAppkey(appkey);
 
-        // 第六步，开始合成
-        if(speechSynthesizer.start() < 0)
-        {
-            Toast.makeText(cordovaActivity, "启动语音合成失败！", Toast.LENGTH_LONG).show();
-            speechSynthesizer.stop();
-            return;
-        }
-        Log.d(TAG,"speechSynthesizer start done");
+            // 第五步，设置相关参数，以下选项都会改变最终合成的语音效果，可以按文档调整试听效果
+            // 设置人声
+            Log.i(TAG, "Set chosen voice " + chosenVoice);
+            speechSynthesizer.setVoice(chosenVoice);
+            // 设置语速
+            Log.i(TAG, "User set speechRate " + speechRate);
+            speechSynthesizer.setSpeechRate(speechRate);
+            // 设置要转为语音的文本
+            speechSynthesizer.setText(text);
+            // 设置语音数据采样率
+            speechSynthesizer.setSampleRate(SpeechSynthesizer.SAMPLE_RATE_16K);
+            // 设置语音编码，pcm编码可以直接用audioTrack播放，其他编码不行
+            speechSynthesizer.setFormat(SpeechSynthesizer.FORMAT_PCM);
+            // 设置音量
+            //speechSynthesizer.setVolume(50);
+            // 设置语速
+            //speechSynthesizer.setSpeechRate(0);
+            // 设置语调
+            //speechSynthesizer.setPitchRate(0);
+
+            // 第六步，开始合成
+            if (speechSynthesizer.start() < 0) {
+                Toast.makeText(cordovaActivity, "启动语音合成失败！", Toast.LENGTH_LONG).show();
+                speechSynthesizer.stop();
+                return;
+            }
+            Log.d(TAG, "speechSynthesizer start done");
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -240,11 +240,12 @@ public class Speech extends CordovaPlugin implements SpeechRecognizerCallback {
     }
 
     /**
-     *  取消语音播报
+     * 取消语音播报
+     *
      * @param message
      * @param callbackContext
      */
-    private void cancelSynthesizer(String message, CallbackContext callbackContext){
+    private void cancelSynthesizer(String message, CallbackContext callbackContext) {
         Log.i(TAG, "canceling Synthesizer...");
         speechSynthesizer.cancel();
         audioPlayer.stop();
@@ -262,8 +263,15 @@ public class Speech extends CordovaPlugin implements SpeechRecognizerCallback {
     @Override
     public void onTaskFailed(String msg, int code) {
         Log.d(TAG, "OnTaskFailed: " + msg + ": " + String.valueOf(code));
-        recordTask.stop();
-        speechRecognizer.stop();
+        if (recordTask != null) {
+            recordTask.stop();
+        }
+        if (speechRecognizer != null) {
+            speechRecognizer.stop();
+        }
+        if (speechSynthesizer != null) {
+            speechSynthesizer.stop();
+        }
         final String fullResult = msg;
         cordovaActivity.runOnUiThread(new Runnable() {
             @Override
@@ -394,50 +402,25 @@ public class Speech extends CordovaPlugin implements SpeechRecognizerCallback {
             return null;
         }
     }
-    private static class MyCallback implements SpeechSynthesizerCallback {
-        private WeakReference<SpeechSynthesizer> synthesizerWeakReference;
 
-        public void setSynthesizer(SpeechSynthesizer speechSynthesizer) {
-            synthesizerWeakReference = new WeakReference<>(speechSynthesizer);
-        }
+    // 语音合成开始的回调
+    @Override
+    public void onSynthesisStarted(String msg, int code) {
+        Log.d(TAG, "OnSynthesisStarted " + msg + ": " + String.valueOf(code));
+    }
 
-        // 语音合成开始的回调
-        @Override
-        public void onSynthesisStarted(String msg, int code)
-        {
-            Log.d(TAG,"OnSynthesisStarted " + msg + ": " + String.valueOf(code));
-        }
+    // 第七步，获取音频数据的回调，在这里把音频写入播放器
+    @Override
+    public void onBinaryReceived(byte[] data, int code) {
+        Log.i(TAG, "binary received length: " + data.length);
+        audioPlayer.setAudioData(data);
+    }
 
-        // 第七步，获取音频数据的回调，在这里把音频写入播放器
-        @Override
-        public void onBinaryReceived(byte[] data, int code)
-        {
-            Log.i(TAG, "binary received length: " + data.length);
-            audioPlayer.setAudioData(data);
-        }
-
-        // 语音合成完成的回调，在这里关闭播放器
-        @Override
-        public void onSynthesisCompleted(final String msg, int code)
-        {
-            Log.d(TAG,"OnSynthesisCompleted " + msg + ": " + String.valueOf(code));
-            // 第八步，结束合成
-            synthesizerWeakReference.get().stop();
-        }
-
-        // 调用失败的回调
-        @Override
-        public void onTaskFailed(String msg, int code)
-        {
-            Log.d(TAG,"OnTaskFailed " + msg + ": " + String.valueOf(code));
-            // 第八步，结束合成
-            synthesizerWeakReference.get().stop();
-        }
-
-        // 连接关闭的回调
-        @Override
-        public void onChannelClosed(String msg, int code) {
-            Log.d(TAG, "OnChannelClosed " + msg + ": " + String.valueOf(code));
-        }
+    // 语音合成完成的回调，在这里关闭播放器
+    @Override
+    public void onSynthesisCompleted(final String msg, int code) {
+        Log.d(TAG, "OnSynthesisCompleted " + msg + ": " + String.valueOf(code));
+        // 第八步，结束合成
+        speechSynthesizer.stop();
     }
 }
