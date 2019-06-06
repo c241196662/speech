@@ -52,5 +52,23 @@ document.addEventListener('speech.stopRecognizeCallback', function (msg) {
 	*/
 	setresult(JSON.stringify(msg));
 });
+// 启动语音播报
+speech.startSynthesizer({
+	token: token, // 从自己的服务器上获取token,或者从阿里的项目管理中获取token
+	appkey: appkey, // appkey, 项目的appkey
+	text: text // 播报的文字
+}, function (msg) {
+	setaction2('startSynthesizer_success_' + msg);
+}, function (e) {
+	setaction2('startSynthesizer_error_' + e);
+});
+// 取消语音播报
+speech.cancelSynthesizer({
+}, function (msg) {
+	setaction2('cancelSynthesizer_success_' + msg);
+	isplay = 0;
+}, function (e) {
+	setaction2('cancelSynthesizer_error_' + e);
+});
 ```
 ## 施工中
