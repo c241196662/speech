@@ -22,6 +22,7 @@
 			<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
         </config-file>
 		<source-file src="src/android/Speech.java" target-dir="src/cordova/plugin/bakaan/speech" />
+		<source-file src="src/android/AudioPlayer.java" target-dir="src/cordova/plugin/bakaan/speech" />
 		<source-file src="src/android/lib/nlssdk.aar" target-dir="app/libs" framework="true"/>
         <framework src="android-build.gradle" custom="true" type="gradleReference" />
 	</platform>
